@@ -1,0 +1,15 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-contax-dev-185751-authRole",
+            "UnauthRoleArn": "arn:aws:iam::909520030490:role/amplify-contax-dev-185751-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::909520030490:role/amplify-contax-dev-185751-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-contax-dev-185751-deployment",
+            "UnauthRoleName": "amplify-contax-dev-185751-unauthRole",
+            "StackName": "amplify-contax-dev-185751",
+            "StackId": "arn:aws:cloudformation:us-east-1:909520030490:stack/amplify-contax-dev-185751/4084a230-dcef-11ea-b632-0e91a2a31d14",
+            "AmplifyAppId": "dpkqn0ib0xj80"
+        }
+    }
+}
