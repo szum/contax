@@ -9,7 +9,7 @@ export const onCreateContact = /* GraphQL */ `
       name
       jobTitle
       address
-      phoneNumber
+      phoneNumbers
       email
       pictureUrl
       createdAt
@@ -24,7 +24,7 @@ export const onUpdateContact = /* GraphQL */ `
       name
       jobTitle
       address
-      phoneNumber
+      phoneNumbers
       email
       pictureUrl
       createdAt
@@ -39,7 +39,7 @@ export const onDeleteContact = /* GraphQL */ `
       name
       jobTitle
       address
-      phoneNumber
+      phoneNumbers
       email
       pictureUrl
       createdAt

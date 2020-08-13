@@ -13,16 +13,30 @@ import Help from '@material-ui/icons/Help';
 import Person from '@material-ui/icons/Person';
 import TextField from '@material-ui/core/TextField';
 
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    nested: {
+      paddingLeft: theme.spacing(8),
+    },
+  }),
+);
+
 const ContactListItem = (props: any) => {
+  const classes = useStyles();
+
   return(
-    <ListItem>
+    <ListItem className={classes.nested}>
       <ListItemAvatar>
         <Avatar>
           {icon(props.type)}
         </Avatar>
       </ListItemAvatar>
       {
-        props.editing ? editContactItem(props) : <ListItemText primary={toTitleCase(props.type)} secondary={props.value} />
+        props.editing
+        ? editContactItem(props)
+        : <ListItemText primary={toTitleCase(props.type)} secondary={props.value} />
       }
     </ListItem>
   );
@@ -35,7 +49,7 @@ const editContactItem = (props: any) => {
         id="standard-basic"
         label={toTitleCase(props.type)}
         value={props.value}
-        onChange={props.handleChange}
+        onChange={(e) => props.handleChange(e, props.id)}
         fullWidth
       />
     </ListItemText>

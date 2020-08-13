@@ -8,6 +8,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
+import Person from '@material-ui/icons/Person';
+import AddCircle from '@material-ui/icons/AddCircle';
+import Save from '@material-ui/icons/Save';
+import Delete from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
+
 
 const ContactItem = (props: any) => {
   const [open, setOpen] = useState(false);
@@ -17,50 +23,45 @@ const ContactItem = (props: any) => {
   const [name, setName] = useState(props.name);
   const [jobTitle, setJobTitle] = useState(props.jobTitle);
   const [address, setAddress] = useState(props.address);
-  const [phoneNumber, setPhoneNumber] = useState(props.phoneNumber);
+  const [phoneNumbers, setPhoneNumbers] = useState(props.phoneNumbers);
   const [email, setEmail] = useState(props.email);
 
-  const setStateMap: any = {
-    'name': setName,
-    'jobTitle': setJobTitle,
-    'address': setAddress,
-    'phoneNumber': setPhoneNumber,
-    'email': setEmail
-  };
-
+  // If the contact has no ID we assume it's a blank form for creation
   useEffect(() => {
     if (!props.id) {
       setOpen(true);
       setCreating(true);
     }
-  }, [props.id])
-
+  }, [props.id]);
 
   const handleDropdown = () => {
     setOpen(!open);
   };
 
-  const handleItemChange = (type: string, value: string) => {
-    setStateMap[type](value);
+  const handlePhoneNumbersChange = (event: any, index: number) => {
+    const newNumbers = phoneNumbers.slice(0);
+    newNumbers[index] = event.target.value;
+    setPhoneNumbers(newNumbers);
   }
 
   return(
     <React.Fragment>
       <ListItem button onClick={handleDropdown}>
         <ListItemIcon>
+          <Person fontSize="large" />
         </ListItemIcon>
-        <ListItemText primary={props.name} />
+        <ListItemText primary={creating ? 'New Contact' : props.name} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="nav" disablePadding>
+        <List component="div" disablePadding>
           {
             editing || creating
             ? <ContactListItem
                 type="name"
                 value={name}
                 editing={editing || creating}
-                handleChange={(e: any) => handleItemChange('name', e.target.value)}
+                handleChange={(e: any) => setName(e.target.value)}
               />
             : undefined
           }
@@ -68,65 +69,92 @@ const ContactItem = (props: any) => {
             type="jobTitle"
             value={jobTitle}
             editing={editing || creating}
-            handleChange={(e: any) => handleItemChange('jobTitle', e.target.value)}
+            handleChange={(e: any) => setJobTitle(e.target.value)}
           />
           <ContactListItem
             type="address"
             value={address}
             editing={editing || creating}
-            handleChange={(e: any) => handleItemChange('address', e.target.value)}
+            handleChange={(e: any) => setAddress(e.target.value)}
           />
-          <ContactListItem
-            type="phoneNumber"
-            value={phoneNumber}
-            editing={editing || creating}
-            handleChange={(e: any) => handleItemChange('phoneNumber', e.target.value)}
-           />
           <ContactListItem
             type="email"
             value={email}
             editing={editing}
-            handleChange={(e: any) => handleItemChange('email', e.target.value)}
-           />
+            handleChange={(e: any) => setEmail(e.target.value)}
+          />
+          {
+            phoneNumbers.map((pn: string, idx: number) => {
+              return(
+                <ContactListItem
+                  key={idx}
+                  id={idx}
+                  type="phoneNumber"
+                  value={pn}
+                  editing={editing}
+                  handleChange={handlePhoneNumbersChange}
+                />
+              );
+            })
+          }
         </List>
         <List component="nav" aria-label="secondary mailbox folder">
           {
-            creating
+            creating || editing
             ? <ListItem
                 button
-                onClick={() => {
-                  props.handleCreate({ name, jobTitle, address, phoneNumber, email });
-                  setCreating(false);
-                  setOpen(false);
-                }}
+                onClick={() => setPhoneNumbers([...phoneNumbers, ''])}
               >
-                <ListItemText primary="Save" />
+                <ListItemIcon><AddCircle /></ListItemIcon>
+                <ListItemText primary="Phone Number" />
               </ListItem>
             : undefined
           }
           {
-            editing
-            ? <ListItem button
-                onClick={() => {
-                  props.handleUpdate({ id: props.id, name, jobTitle, address, phoneNumber, email });
-                  setEditing(false);
-                  setOpen(false);
-                }}
-              >
-                <ListItemText primary="Save" />
-              </ListItem>
-            : undefined
+            creating &&
+            <ListItem
+              button
+              onClick={() => {
+                props.handleCreate({ name, jobTitle, address, phoneNumbers, email });
+                setCreating(false);
+                setOpen(false);
+              }}
+            >
+              <ListItemIcon><Save /></ListItemIcon>
+              <ListItemText primary="Save" />
+            </ListItem>
+          }
+          {
+            editing &&
+            <ListItem
+              button
+              onClick={() => {
+                props.handleUpdate({ id: props.id, name, jobTitle, address, phoneNumbers, email });
+                setEditing(false);
+                setOpen(false);
+              }}
+            >
+              <ListItemIcon><Save /></ListItemIcon>
+              <ListItemText primary="Save" />
+            </ListItem>
           }
           {
             !creating && !editing
-            ? <ListItem button onClick={() => setEditing(!editing)}><ListItemText primary="Edit" /></ListItem>
+            ? <ListItem button onClick={() => setEditing(!editing)}>
+                <ListItemIcon><Edit /></ListItemIcon>
+                <ListItemText primary="Edit" />
+              </ListItem>
             : undefined
           }
-          <ListItem button onClick={() => {
-            props.handleDelete(props.id);
-            setOpen(false);
-          }}>
-            <ListItemText primary="Delete" />
+          <ListItem
+            button
+            onClick={() => {
+              props.handleDelete(props.id);
+              setOpen(false);
+            }
+          }>
+            <ListItemIcon><Delete /></ListItemIcon>
+            <ListItemText primary="Delete" color="action" />
           </ListItem>
         </List>
       </Collapse>

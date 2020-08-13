@@ -9,7 +9,7 @@ export const getContact = /* GraphQL */ `
       name
       jobTitle
       address
-      phoneNumber
+      phoneNumbers
       email
       pictureUrl
       createdAt
@@ -29,7 +29,7 @@ export const listContacts = /* GraphQL */ `
         name
         jobTitle
         address
-        phoneNumber
+        phoneNumbers
         email
         pictureUrl
         createdAt

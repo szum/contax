@@ -15,7 +15,7 @@ type Contact = {
   name: string;
   jobTitle: string;
   address: string;
-  phoneNumber: string;
+  phoneNumbers: Array<string>;
   email: string;
   pictureUrl: string;
 }
@@ -29,10 +29,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
+  }
 }));
 
 const initState = {
@@ -40,10 +37,11 @@ const initState = {
 }
 
 const initContact = {
+  id: undefined,
   name: '',
   jobTitle: '',
   address: '',
-  phoneNumber: '',
+  phoneNumbers: [],
   email: '',
   pictureUrl: ''
 }
@@ -70,7 +68,7 @@ const ContactList = (props: any) => {
           name: newContact.name,
           jobTitle: newContact.jobTitle,
           address: newContact.address,
-          phoneNumber: newContact.phoneNumber,
+          phoneNumbers: newContact.phoneNumbers,
           email: newContact.email
         }
       }));
@@ -90,7 +88,7 @@ const ContactList = (props: any) => {
           name: contact.name,
           jobTitle: contact.jobTitle,
           address: contact.address,
-          phoneNumber: contact.phoneNumber,
+          phoneNumbers: contact.phoneNumbers,
           email: contact.email
         }
       }));
@@ -131,9 +129,13 @@ const ContactList = (props: any) => {
         <ListSubheader>
           <IconButton
             aria-label="add"
-            onClick={() => dispatch({ type: 'addNewContact' })}
+            style={{ padding: 0 }}
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch({ type: 'addNewContact' });
+            }}
            >
-            <Add fontSize="small" />
+            <Add fontSize="large" color="primary" />
           </IconButton>
         </ListSubheader>
       </List>
@@ -146,7 +148,7 @@ const ContactList = (props: any) => {
               name={contact.name}
               address={contact.address}
               jobTitle={contact.jobTitle}
-              phoneNumber={contact.phoneNumber}
+              phoneNumbers={contact.phoneNumbers}
               email={contact.email}
               handleCreate={(contact: Contact) => createContact(contact)}
               handleUpdate={(contact: Contact) => updateContact(contact)}

@@ -12,7 +12,7 @@ export const createContact = /* GraphQL */ `
       name
       jobTitle
       address
-      phoneNumber
+      phoneNumbers
       email
       pictureUrl
       createdAt
@@ -30,7 +30,7 @@ export const updateContact = /* GraphQL */ `
       name
       jobTitle
       address
-      phoneNumber
+      phoneNumbers
       email
       pictureUrl
       createdAt
@@ -48,7 +48,7 @@ export const deleteContact = /* GraphQL */ `
       name
       jobTitle
       address
-      phoneNumber
+      phoneNumbers
       email
       pictureUrl
       createdAt

@@ -3,7 +3,7 @@ type Contact @model {
   name: String!
   jobTitle: String!
   address: String!
-  phoneNumber: String!
+  phoneNumbers: [String!]!
   email: String!
   pictureUrl: String
 }
