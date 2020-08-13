@@ -8,7 +8,12 @@ import Home from '@material-ui/icons/Home';
 import Phone from '@material-ui/icons/Phone';
 import Email from '@material-ui/icons/Email';
 import Help from '@material-ui/icons/Help';
+import Person from '@material-ui/icons/Person';
 
+
+import TextField from '@material-ui/core/TextField';
+
+import toTitleCase from '../lib/toTitleCase';
 
 const ContactListItem = (props: any) => {
   return(
@@ -18,21 +23,38 @@ const ContactListItem = (props: any) => {
           {icon(props.type)}
         </Avatar>
       </ListItemAvatar>
-      <ListItemText primary={props.type} secondary={props.content} />
+      {
+        props.editing ? editContactItem(props) : <ListItemText primary={props.type} secondary={props.value} />
+      }
     </ListItem>
+  );
+}
+
+const editContactItem = (props: any) => {
+  return(
+    <ListItemText>
+      <TextField
+        id="standard-basic"
+        label={toTitleCase(props.type)}
+        value={props.value}
+        onChange={props.handleChange}
+      />
+    </ListItemText>
   );
 }
 
 const icon = (type: string) => {
   switch(type) {
-    case 'Job Title':
+    case 'jobTitle':
       return (<WorkIcon />);
-    case 'Address':
+    case 'address':
       return (<Home />);
-    case 'Phone Number':
+    case 'phoneNumber':
       return (<Phone />);
-    case 'Email':
+    case 'email':
       return (<Email />);
+    case 'name':
+      return (<Person />);
     default:
       return (<Help />);
   }
