@@ -1,6 +1,6 @@
 {
     "identityPoolName": "contax9eb1d509_identitypool_9eb1d509",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "contax9eb1d509",
     "userPoolName": "contax9eb1d509_userpool_9eb1d509",
     "autoVerifiedAttributes": [

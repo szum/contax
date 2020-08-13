@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Storage } from 'aws-amplify';
+
 import ContactListItem from './contact-list-item';
 
 import List from '@material-ui/core/List';
@@ -13,6 +15,9 @@ import AddCircle from '@material-ui/icons/AddCircle';
 import Save from '@material-ui/icons/Save';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
+import Photo from '@material-ui/icons/Photo';
+
+import { green } from '@material-ui/core/colors';
 
 
 const ContactItem = (props: any) => {
@@ -24,6 +29,7 @@ const ContactItem = (props: any) => {
   const [jobTitle, setJobTitle] = useState(props.jobTitle);
   const [address, setAddress] = useState(props.address);
   const [phoneNumbers, setPhoneNumbers] = useState(props.phoneNumbers);
+  const [pictureUrl, setPictureUrl] = useState(props.pictureUrl);
   const [email, setEmail] = useState(props.email);
 
   // If the contact has no ID we assume it's a blank form for creation
@@ -44,12 +50,31 @@ const ContactItem = (props: any) => {
     setPhoneNumbers(newNumbers);
   }
 
+  const hiddenFileInput = useRef<HTMLInputElement>(document.createElement("input"));
+
+  async function handleUploadPicture(event: any) {
+    const file = event.target.files[0];
+    const upload: any = await Storage.put(`${file.name}`, file, { contentType: file.type });
+    const picture = await Storage.get(upload.key);
+    setPictureUrl(picture);
+  }
+
+  const creatingOrEditing = creating || editing;
+
   return(
     <React.Fragment>
       <ListItem button onClick={handleDropdown}>
         <ListItemIcon>
-          <Person fontSize="large" />
-        </ListItemIcon>
+          {
+            pictureUrl
+            ? <img
+                src={pictureUrl}
+                alt="Contact avatar"
+                style={{ width: '35px', height: '35px', borderRadius: '50%'}}
+              />
+            : <Person fontSize="large" />
+          }
+          </ListItemIcon>
         <ListItemText primary={creating ? 'New Contact' : props.name} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
@@ -100,13 +125,30 @@ const ContactItem = (props: any) => {
         </List>
         <List component="nav" aria-label="secondary mailbox folder">
           {
-            creating || editing
+            creatingOrEditing
             ? <ListItem
                 button
                 onClick={() => setPhoneNumbers([...phoneNumbers, ''])}
               >
-                <ListItemIcon><AddCircle /></ListItemIcon>
+                <ListItemIcon><AddCircle style={{ color: green[500] }} /></ListItemIcon>
                 <ListItemText primary="Phone Number" />
+              </ListItem>
+            : undefined
+          }
+          {
+            creatingOrEditing && !pictureUrl
+            ? <ListItem
+                button
+                onClick={() => hiddenFileInput.current.click()}
+              >
+                <input
+                  type="file"
+                  style={{display:'none'}}
+                  ref={hiddenFileInput}
+                  onChange={handleUploadPicture}
+                />
+                <ListItemIcon><Photo /></ListItemIcon>
+                <ListItemText primary="Upload Picture" />
               </ListItem>
             : undefined
           }
@@ -115,7 +157,7 @@ const ContactItem = (props: any) => {
             <ListItem
               button
               onClick={() => {
-                props.handleCreate({ name, jobTitle, address, phoneNumbers, email });
+                props.handleCreate({ name, jobTitle, address, phoneNumbers, email, pictureUrl });
                 setCreating(false);
                 setOpen(false);
               }}
@@ -129,13 +171,13 @@ const ContactItem = (props: any) => {
             <ListItem
               button
               onClick={() => {
-                props.handleUpdate({ id: props.id, name, jobTitle, address, phoneNumbers, email });
+                props.handleUpdate({ id: props.id, name, jobTitle, address, phoneNumbers, email, pictureUrl });
                 setEditing(false);
                 setOpen(false);
               }}
             >
               <ListItemIcon><Save /></ListItemIcon>
-              <ListItemText primary="Save" />
+              <ListItemText primary="Save"  />
             </ListItem>
           }
           {
@@ -153,8 +195,8 @@ const ContactItem = (props: any) => {
               setOpen(false);
             }
           }>
-            <ListItemIcon><Delete /></ListItemIcon>
-            <ListItemText primary="Delete" color="action" />
+            <ListItemIcon><Delete color="action" /></ListItemIcon>
+            <ListItemText primary="Delete" />
           </ListItem>
         </List>
       </Collapse>

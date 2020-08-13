@@ -69,7 +69,8 @@ const ContactList = (props: any) => {
           jobTitle: newContact.jobTitle,
           address: newContact.address,
           phoneNumbers: newContact.phoneNumbers,
-          email: newContact.email
+          email: newContact.email,
+          pictureUrl: newContact.pictureUrl
         }
       }));
       if (createMutation) {
@@ -89,7 +90,8 @@ const ContactList = (props: any) => {
           jobTitle: contact.jobTitle,
           address: contact.address,
           phoneNumbers: contact.phoneNumbers,
-          email: contact.email
+          email: contact.email,
+          pictureUrl: contact.pictureUrl
         }
       }));
       if (updateMutation) {
@@ -126,12 +128,11 @@ const ContactList = (props: any) => {
         aria-labelledby="nested-list-subheader"
         className={classes.root}
       >
-        <ListSubheader>
+        <ListSubheader component="div">
           <IconButton
             aria-label="add"
             style={{ padding: 0 }}
             onClick={(e) => {
-              e.preventDefault();
               dispatch({ type: 'addNewContact' });
             }}
            >
@@ -150,6 +151,7 @@ const ContactList = (props: any) => {
               jobTitle={contact.jobTitle}
               phoneNumbers={contact.phoneNumbers}
               email={contact.email}
+              pictureUrl={contact.pictureUrl}
               handleCreate={(contact: Contact) => createContact(contact)}
               handleUpdate={(contact: Contact) => updateContact(contact)}
               handleDelete={(id: string) => deleteContact(id)}
