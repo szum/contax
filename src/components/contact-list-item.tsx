@@ -1,4 +1,6 @@
 import React from 'react';
+import toTitleCase from '../lib/toTitleCase';
+
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -9,11 +11,7 @@ import Phone from '@material-ui/icons/Phone';
 import Email from '@material-ui/icons/Email';
 import Help from '@material-ui/icons/Help';
 import Person from '@material-ui/icons/Person';
-
-
 import TextField from '@material-ui/core/TextField';
-
-import toTitleCase from '../lib/toTitleCase';
 
 const ContactListItem = (props: any) => {
   return(
@@ -24,7 +22,7 @@ const ContactListItem = (props: any) => {
         </Avatar>
       </ListItemAvatar>
       {
-        props.editing ? editContactItem(props) : <ListItemText primary={props.type} secondary={props.value} />
+        props.editing ? editContactItem(props) : <ListItemText primary={toTitleCase(props.type)} secondary={props.value} />
       }
     </ListItem>
   );
@@ -38,6 +36,7 @@ const editContactItem = (props: any) => {
         label={toTitleCase(props.type)}
         value={props.value}
         onChange={props.handleChange}
+        fullWidth
       />
     </ListItemText>
   );

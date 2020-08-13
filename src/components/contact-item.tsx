@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ContactListItem from './contact-list-item';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -6,8 +8,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
-
-import ContactListItem from './contact-list-item';
 
 const ContactItem = (props: any) => {
   const [open, setOpen] = useState(false);
@@ -112,11 +112,13 @@ const ContactItem = (props: any) => {
                   setEditing(false);
                   setOpen(false);
                 }}
-              ><ListItemText primary="Save" /></ListItem>
+              >
+                <ListItemText primary="Save" />
+              </ListItem>
             : undefined
           }
           {
-            !creating || !editing
+            !creating && !editing
             ? <ListItem button onClick={() => setEditing(!editing)}><ListItemText primary="Edit" /></ListItem>
             : undefined
           }

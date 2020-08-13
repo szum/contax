@@ -1,19 +1,14 @@
 import React, { useEffect, useReducer } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import * as queries from '../graphql/queries';
-import { makeStyles } from '@material-ui/core/styles';
-
-import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
-
 import ContactItem from './contact-item';
-
+import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 
-
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import Add from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
-
 
 type Contact = {
   id: string;
@@ -122,18 +117,6 @@ const ContactList = (props: any) => {
     }
   }
 
-  const handleCreate = (contact: Contact) => {
-    createContact(contact);
-  }
-
-  const handleDelete = (id: string) => {
-    deleteContact(id);
-  }
-
-  const handleUpdate = (contact: Contact) => {
-    updateContact(contact);
-  }
-
   useEffect(() => {
     fetchContacts();
   }, []);
@@ -165,9 +148,9 @@ const ContactList = (props: any) => {
               jobTitle={contact.jobTitle}
               phoneNumber={contact.phoneNumber}
               email={contact.email}
-              handleCreate={handleCreate}
-              handleUpdate={handleUpdate}
-              handleDelete={handleDelete}
+              handleCreate={(contact: Contact) => createContact(contact)}
+              handleUpdate={(contact: Contact) => updateContact(contact)}
+              handleDelete={(id: string) => deleteContact(id)}
             />
           );
         })
