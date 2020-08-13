@@ -10,6 +10,11 @@
             "StackName": "amplify-contax-dev-185751",
             "StackId": "arn:aws:cloudformation:us-east-1:909520030490:stack/amplify-contax-dev-185751/4084a230-dcef-11ea-b632-0e91a2a31d14",
             "AmplifyAppId": "dpkqn0ib0xj80"
+        },
+        "categories": {
+            "auth": {
+                "contax9eb1d509": {}
+            }
         }
     }
 }

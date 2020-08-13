@@ -1,9 +1,9 @@
 type Contact @model {
   id: ID!
   name: String!
-  jobTitle: String
-  address: String
-  phoneNumber: String
-  email: String
+  jobTitle: String!
+  address: String!
+  phoneNumber: String!
+  email: String!
   pictureUrl: String
 }
