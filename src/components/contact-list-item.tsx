@@ -52,7 +52,7 @@ const EditContactItem = (props: any) => {
         value={props.value}
         error={props.error}
         helperText={props.helperText}
-        onChange={(e) => props.handleChange(e, props.id)}
+        onChange={(e) => props.handleChange(e, props.id) }
         fullWidth
       />
     </ListItemText>

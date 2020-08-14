@@ -26,12 +26,8 @@ const ContactItem = (props: any) => {
   const [editing, setEditing] = useState(false);
   const [creating, setCreating] = useState(false);
 
-  const [name, setName] = useState(props.name);
-  const [jobTitle, setJobTitle] = useState(props.jobTitle);
-  const [address, setAddress] = useState(props.address);
   const [phoneNumbers, setPhoneNumbers] = useState(props.phoneNumbers);
   const [pictureUrl, setPictureUrl] = useState(props.pictureUrl);
-  const [email, setEmail] = useState(props.email);
 
   const [errorMessages, setErrorMessages] = useState({
     name: undefined,
@@ -74,12 +70,12 @@ const ContactItem = (props: any) => {
     let valid = true;
     let validationErrors: any = {};
 
-    if (name.length === 0) {
+    if (props.name.length === 0) {
       valid = false;
       validationErrors.name = "Contact requires a name";
     }
 
-    if (email.length > 0 && !validateEmail(email)) {
+    if (props.email.length > 0 && !validateEmail(props.email)) {
       valid = false;
       validationErrors.email = "Enter a valid email address";
     }
@@ -115,38 +111,42 @@ const ContactItem = (props: any) => {
           {
             editing || creating
             ? <ContactListItem
+                id={props.id}
                 name="name"
-                value={name}
+                value={props.name}
                 editing={editing || creating}
                 error={errorMessages.name !== undefined}
                 helperText={errorMessages.name}
-                handleChange={(e: any) => setName(e.target.value)}
+                handleChange={props.handleEditField}
               />
             : undefined
           }
           <ContactListItem
+            id={props.id}
             name="jobTitle"
-            value={jobTitle}
+            value={props.jobTitle}
             editing={editing || creating}
             error={errorMessages.jobTitle !== undefined}
             helperText={errorMessages.jobTitle}
-            handleChange={(e: any) => setJobTitle(e.target.value)}
+            handleChange={props.handleEditField}
           />
           <ContactListItem
+            id={props.id}
             name="address"
-            value={address}
+            value={props.address}
             editing={editing || creating}
             error={errorMessages.address !== undefined}
             helperText={errorMessages.address}
-            handleChange={(e: any) => setAddress(e.target.value)}
+            handleChange={props.handleEditField}
           />
           <ContactListItem
+            id={props.id}
             name="email"
-            value={email}
+            value={props.email}
             editing={editing || creating}
             error={errorMessages.email !== undefined}
             helperText={errorMessages.email}
-            handleChange={(e: any) => setEmail(e.target.value)}
+            handleChange={props.handleEditField}
           />
           {
             phoneNumbers.map((pn: string, idx: number) => {
@@ -200,7 +200,7 @@ const ContactItem = (props: any) => {
               button
               onClick={() => {
                 if (validateContact()) {
-                  props.handleCreate({ name, jobTitle, address, phoneNumbers, email, pictureUrl });
+                  props.handleCreate({ name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl });
                   setCreating(false);
                   setOpen(false);
                 }
@@ -216,7 +216,7 @@ const ContactItem = (props: any) => {
               button
               onClick={() => {
                 if (validateContact()) {
-                  props.handleUpdate({ id: props.id, name, jobTitle, address, phoneNumbers, email, pictureUrl });
+                  props.handleUpdate({ id: props.id, name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl });
                   setEditing(false);
                   setOpen(false);
                 }

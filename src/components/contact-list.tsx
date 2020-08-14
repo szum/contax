@@ -117,6 +117,14 @@ const ContactList = (props: any) => {
     }
   }
 
+  function editContactFieldHandler(event: any, id: string) {
+    dispatch({ type: 'editContactField', payload: {
+      id,
+      field: event.target.name,
+      value: event.target.value
+    }});
+  }
+
   useEffect(() => {
     fetchContacts();
   }, []);
@@ -154,6 +162,7 @@ const ContactList = (props: any) => {
               pictureUrl={contact.pictureUrl}
               handleCreate={(contact: Contact) => createContact(contact)}
               handleUpdate={(contact: Contact) => updateContact(contact)}
+              handleEditField={editContactFieldHandler}
               handleDelete={(id: string) => deleteContact(id)}
             />
           );
@@ -181,6 +190,16 @@ function reducer(state: any, action: any) {
       return {
         ...state,
         contacts: [...state.contacts.filter((con: Contact) => con.id !== undefined), action.payload],
+      }
+    case 'editContactField':
+      return {
+        ...state,
+        contacts: state.contacts.map((con: Contact) => {
+          if (con.id === action.payload.id) {
+            return { ...con, [action.payload.field]: action.payload.value };
+          }
+          return con;
+        })
       }
     case 'updateContact':
       return {
