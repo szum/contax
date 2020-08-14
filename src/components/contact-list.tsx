@@ -20,10 +20,6 @@ type Contact = {
   pictureUrl: string;
 }
 
-// type Props = {
-//   contacts: Array<Contact>;
-// }
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -41,7 +37,7 @@ const initContact = {
   name: '',
   jobTitle: '',
   address: '',
-  phoneNumbers: [],
+  phoneNumbers: [''],
   email: '',
   pictureUrl: ''
 }

@@ -84,6 +84,11 @@ const ContactItem = (props: any) => {
       validationErrors.email = "Enter a valid email address";
     }
 
+    if (phoneNumbers.some((phoneNum: string) => phoneNum.length === 0)) {
+      valid = false;
+      validationErrors.phoneNumber = "Contact requires a phone number";
+    }
+
     setErrorMessages(validationErrors);
     return valid;
   }
@@ -138,7 +143,7 @@ const ContactItem = (props: any) => {
           <ContactListItem
             name="email"
             value={email}
-            editing={editing}
+            editing={editing || creating}
             error={errorMessages.email !== undefined}
             helperText={errorMessages.email}
             handleChange={(e: any) => setEmail(e.target.value)}
@@ -151,7 +156,7 @@ const ContactItem = (props: any) => {
                   id={idx}
                   name="phoneNumber"
                   value={pn}
-                  editing={editing}
+                  editing={editing || creating}
                   error={errorMessages.phoneNumber !== undefined}
                   helperText={errorMessages.phoneNumber}
                   handleChange={handlePhoneNumbersChange}

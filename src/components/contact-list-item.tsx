@@ -35,14 +35,14 @@ const ContactListItem = (props: any) => {
       </ListItemAvatar>
       {
         props.editing
-        ? editContactItem(props)
+        ? <EditContactItem {...props} />
         : <ListItemText primary={toTitleCase(props.name)} secondary={props.value} />
       }
     </ListItem>
   );
 }
 
-const editContactItem = (props: any) => {
+const EditContactItem = (props: any) => {
   return(
     <ListItemText>
       <TextField
