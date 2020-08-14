@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Storage } from 'aws-amplify';
 
 import ContactListItem from './contact-list-item';
 
@@ -27,7 +26,6 @@ const ContactItem = (props: any) => {
   const [creating, setCreating] = useState(false);
 
   const [phoneNumbers, setPhoneNumbers] = useState(props.phoneNumbers);
-  const [pictureUrl, setPictureUrl] = useState(props.pictureUrl);
 
   const [errorMessages, setErrorMessages] = useState({
     name: undefined,
@@ -56,13 +54,6 @@ const ContactItem = (props: any) => {
   }
 
   const hiddenFileInput = useRef<HTMLInputElement>(document.createElement("input"));
-
-  async function handleUploadPicture(event: any) {
-    const file = event.target.files[0];
-    const upload: any = await Storage.put(`${file.name}`, file, { contentType: file.type });
-    const picture = await Storage.get(upload.key);
-    setPictureUrl(picture);
-  }
 
   const creatingOrEditing = creating || editing;
 
@@ -94,9 +85,9 @@ const ContactItem = (props: any) => {
       <ListItem button onClick={handleDropdown}>
         <ListItemIcon>
           {
-            pictureUrl
+            props.pictureUrl
             ? <img
-                src={pictureUrl}
+                src={props.pictureUrl}
                 alt="Contact avatar"
                 style={{ width: '35px', height: '35px', borderRadius: '50%'}}
               />
@@ -178,7 +169,7 @@ const ContactItem = (props: any) => {
             : undefined
           }
           {
-            creatingOrEditing && !pictureUrl
+            creatingOrEditing && !props.pictureUrl
             ? <ListItem
                 button
                 onClick={() => hiddenFileInput.current.click()}
@@ -187,7 +178,7 @@ const ContactItem = (props: any) => {
                   type="file"
                   style={{display:'none'}}
                   ref={hiddenFileInput}
-                  onChange={handleUploadPicture}
+                  onChange={(e) => props.handleUploadPicture(e, props.id)}
                 />
                 <ListItemIcon><Photo /></ListItemIcon>
                 <ListItemText primary="Upload Picture" />
@@ -200,7 +191,7 @@ const ContactItem = (props: any) => {
               button
               onClick={() => {
                 if (validateContact()) {
-                  props.handleCreate({ name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl });
+                  props.handleCreate({ name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl: props.pictureUrl });
                   setCreating(false);
                   setOpen(false);
                 }
@@ -216,7 +207,7 @@ const ContactItem = (props: any) => {
               button
               onClick={() => {
                 if (validateContact()) {
-                  props.handleUpdate({ id: props.id, name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl });
+                  props.handleUpdate({ id: props.id, name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl: props.pictureUrl });
                   setEditing(false);
                   setOpen(false);
                 }

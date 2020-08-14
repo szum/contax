@@ -1,5 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
+import { Storage } from 'aws-amplify';
+
 import ContactItem from './contact-item';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
@@ -117,6 +119,17 @@ const ContactList = (props: any) => {
     }
   }
 
+  async function handleUploadPicture(event: any, id: string) {
+    const file = event.target.files[0];
+    const upload: any = await Storage.put(`${file.name}`, file, { contentType: file.type });
+    const picture = await Storage.get(upload.key);
+    dispatch({ type: 'editContactField', payload: {
+      id,
+      field: 'pictureUrl',
+      value: picture
+    }});
+  }
+
   function editContactFieldHandler(event: any, id: string) {
     dispatch({ type: 'editContactField', payload: {
       id,
@@ -164,6 +177,7 @@ const ContactList = (props: any) => {
               handleUpdate={(contact: Contact) => updateContact(contact)}
               handleEditField={editContactFieldHandler}
               handleDelete={(id: string) => deleteContact(id)}
+              handleUploadPicture={handleUploadPicture}
             />
           );
         })
