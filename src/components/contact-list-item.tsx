@@ -30,13 +30,13 @@ const ContactListItem = (props: any) => {
     <ListItem className={classes.nested}>
       <ListItemAvatar>
         <Avatar>
-          {icon(props.type)}
+          {icon(props.name)}
         </Avatar>
       </ListItemAvatar>
       {
         props.editing
         ? editContactItem(props)
-        : <ListItemText primary={toTitleCase(props.type)} secondary={props.value} />
+        : <ListItemText primary={toTitleCase(props.name)} secondary={props.value} />
       }
     </ListItem>
   );
@@ -47,8 +47,11 @@ const editContactItem = (props: any) => {
     <ListItemText>
       <TextField
         id="standard-basic"
-        label={toTitleCase(props.type)}
+        label={toTitleCase(props.name)}
+        name={props.name}
         value={props.value}
+        error={props.error}
+        helperText={props.helperText}
         onChange={(e) => props.handleChange(e, props.id)}
         fullWidth
       />
@@ -56,8 +59,8 @@ const editContactItem = (props: any) => {
   );
 }
 
-const icon = (type: string) => {
-  switch(type) {
+const icon = (name: string) => {
+  switch(name) {
     case 'jobTitle':
       return (<WorkIcon />);
     case 'address':

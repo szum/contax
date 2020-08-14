@@ -19,6 +19,7 @@ import Photo from '@material-ui/icons/Photo';
 
 import { green } from '@material-ui/core/colors';
 
+import validateEmail from '../lib/validateEmail';
 
 const ContactItem = (props: any) => {
   const [open, setOpen] = useState(false);
@@ -31,6 +32,14 @@ const ContactItem = (props: any) => {
   const [phoneNumbers, setPhoneNumbers] = useState(props.phoneNumbers);
   const [pictureUrl, setPictureUrl] = useState(props.pictureUrl);
   const [email, setEmail] = useState(props.email);
+
+  const [errorMessages, setErrorMessages] = useState({
+    name: undefined,
+    jobTitle: undefined,
+    address: undefined,
+    email: undefined,
+    phoneNumber: undefined
+  });
 
   // If the contact has no ID we assume it's a blank form for creation
   useEffect(() => {
@@ -61,6 +70,24 @@ const ContactItem = (props: any) => {
 
   const creatingOrEditing = creating || editing;
 
+  function validateContact(): boolean {
+    let valid = true;
+    let validationErrors: any = {};
+
+    if (name.length > 0) {
+      valid = false;
+      validationErrors.name = "Contact requires a name";
+    }
+
+    if (email.length > 0 && !validateEmail(email)) {
+      valid = false;
+      validationErrors.email = "Enter a valid email address";
+    }
+
+    setErrorMessages(validationErrors);
+    return valid;
+  }
+
   return(
     <React.Fragment>
       <ListItem button onClick={handleDropdown}>
@@ -83,29 +110,37 @@ const ContactItem = (props: any) => {
           {
             editing || creating
             ? <ContactListItem
-                type="name"
+                name="name"
                 value={name}
                 editing={editing || creating}
+                error={errorMessages.name !== undefined}
+                helperText={errorMessages.name}
                 handleChange={(e: any) => setName(e.target.value)}
               />
             : undefined
           }
           <ContactListItem
-            type="jobTitle"
+            name="jobTitle"
             value={jobTitle}
             editing={editing || creating}
+            error={errorMessages.jobTitle !== undefined}
+            helperText={errorMessages.jobTitle}
             handleChange={(e: any) => setJobTitle(e.target.value)}
           />
           <ContactListItem
-            type="address"
+            name="address"
             value={address}
             editing={editing || creating}
+            error={errorMessages.address !== undefined}
+            helperText={errorMessages.address}
             handleChange={(e: any) => setAddress(e.target.value)}
           />
           <ContactListItem
-            type="email"
+            name="email"
             value={email}
             editing={editing}
+            error={errorMessages.email !== undefined}
+            helperText={errorMessages.email}
             handleChange={(e: any) => setEmail(e.target.value)}
           />
           {
@@ -114,9 +149,11 @@ const ContactItem = (props: any) => {
                 <ContactListItem
                   key={idx}
                   id={idx}
-                  type="phoneNumber"
+                  name="phoneNumber"
                   value={pn}
                   editing={editing}
+                  error={errorMessages.phoneNumber !== undefined}
+                  helperText={errorMessages.phoneNumber}
                   handleChange={handlePhoneNumbersChange}
                 />
               );
@@ -157,9 +194,11 @@ const ContactItem = (props: any) => {
             <ListItem
               button
               onClick={() => {
-                props.handleCreate({ name, jobTitle, address, phoneNumbers, email, pictureUrl });
-                setCreating(false);
-                setOpen(false);
+                if (validateContact()) {
+                  props.handleCreate({ name, jobTitle, address, phoneNumbers, email, pictureUrl });
+                  setCreating(false);
+                  setOpen(false);
+                }
               }}
             >
               <ListItemIcon><Save /></ListItemIcon>
@@ -171,9 +210,11 @@ const ContactItem = (props: any) => {
             <ListItem
               button
               onClick={() => {
-                props.handleUpdate({ id: props.id, name, jobTitle, address, phoneNumbers, email, pictureUrl });
-                setEditing(false);
-                setOpen(false);
+                if (validateContact()) {
+                  props.handleUpdate({ id: props.id, name, jobTitle, address, phoneNumbers, email, pictureUrl });
+                  setEditing(false);
+                  setOpen(false);
+                }
               }}
             >
               <ListItemIcon><Save /></ListItemIcon>
