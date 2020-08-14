@@ -130,12 +130,17 @@ const ContactList = (props: any) => {
     }});
   }
 
-  function editContactFieldHandler(event: any, id: string) {
+  function editFieldHandler(event: any, id: string, idx: number) {
     dispatch({ type: 'editContactField', payload: {
       id,
+      idx,
       field: event.target.name,
-      value: event.target.value
+      value: event.target.value,
     }});
+  }
+
+  function addPhoneNumberHandler(id: string) {
+    dispatch({ type: 'addPhoneNumber', payload: { id }});
   }
 
   useEffect(() => {
@@ -175,7 +180,8 @@ const ContactList = (props: any) => {
               pictureUrl={contact.pictureUrl}
               handleCreate={(contact: Contact) => createContact(contact)}
               handleUpdate={(contact: Contact) => updateContact(contact)}
-              handleEditField={editContactFieldHandler}
+              handleEditField={editFieldHandler}
+              handleAddPhoneNumber={addPhoneNumberHandler}
               handleDelete={(id: string) => deleteContact(id)}
               handleUploadPicture={handleUploadPicture}
             />
@@ -210,7 +216,23 @@ function reducer(state: any, action: any) {
         ...state,
         contacts: state.contacts.map((con: Contact) => {
           if (con.id === action.payload.id) {
-            return { ...con, [action.payload.field]: action.payload.value };
+            if (action.payload.field === 'phoneNumber') {
+              const newNumbers = con.phoneNumbers.slice(0);
+              newNumbers[action.payload.idx] = action.payload.value;
+              return { ...con, phoneNumbers: newNumbers };
+            } else {
+              return { ...con, [action.payload.field]: action.payload.value };
+            }
+          }
+          return con;
+        })
+      }
+    case 'addPhoneNumber':
+      return {
+        ...state,
+        contacts: state.contacts.map((con: Contact) => {
+          if (con.id === action.payload.id) {
+            return { ...con, phoneNumbers: [...con.phoneNumbers, ''] };
           }
           return con;
         })

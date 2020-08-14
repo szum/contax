@@ -25,8 +25,6 @@ const ContactItem = (props: any) => {
   const [editing, setEditing] = useState(false);
   const [creating, setCreating] = useState(false);
 
-  const [phoneNumbers, setPhoneNumbers] = useState(props.phoneNumbers);
-
   const [errorMessages, setErrorMessages] = useState({
     name: undefined,
     jobTitle: undefined,
@@ -47,12 +45,6 @@ const ContactItem = (props: any) => {
     setOpen(!open);
   };
 
-  const handlePhoneNumbersChange = (event: any, index: number) => {
-    const newNumbers = phoneNumbers.slice(0);
-    newNumbers[index] = event.target.value;
-    setPhoneNumbers(newNumbers);
-  }
-
   const hiddenFileInput = useRef<HTMLInputElement>(document.createElement("input"));
 
   const creatingOrEditing = creating || editing;
@@ -71,7 +63,7 @@ const ContactItem = (props: any) => {
       validationErrors.email = "Enter a valid email address";
     }
 
-    if (phoneNumbers.some((phoneNum: string) => phoneNum.length === 0)) {
+    if (props.phoneNumbers.some((phoneNum: string) => phoneNum.length === 0)) {
       valid = false;
       validationErrors.phoneNumber = "Contact requires a phone number";
     }
@@ -140,17 +132,18 @@ const ContactItem = (props: any) => {
             handleChange={props.handleEditField}
           />
           {
-            phoneNumbers.map((pn: string, idx: number) => {
+            props.phoneNumbers.map((pn: string, idx: number) => {
               return(
                 <ContactListItem
                   key={idx}
-                  id={idx}
+                  idx={idx}
+                  id={props.id}
                   name="phoneNumber"
                   value={pn}
                   editing={editing || creating}
                   error={errorMessages.phoneNumber !== undefined}
                   helperText={errorMessages.phoneNumber}
-                  handleChange={handlePhoneNumbersChange}
+                  handleChange={props.handleEditField}
                 />
               );
             })
@@ -161,7 +154,7 @@ const ContactItem = (props: any) => {
             creatingOrEditing
             ? <ListItem
                 button
-                onClick={() => setPhoneNumbers([...phoneNumbers, ''])}
+                onClick={() => props.handleAddPhoneNumber(props.id)}
               >
                 <ListItemIcon><AddCircle style={{ color: green[500] }} /></ListItemIcon>
                 <ListItemText primary="Phone Number" />
@@ -191,7 +184,7 @@ const ContactItem = (props: any) => {
               button
               onClick={() => {
                 if (validateContact()) {
-                  props.handleCreate({ name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl: props.pictureUrl });
+                  props.handleCreate({ name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers: props.phoneNumbers, email: props.email, pictureUrl: props.pictureUrl });
                   setCreating(false);
                   setOpen(false);
                 }
@@ -207,7 +200,7 @@ const ContactItem = (props: any) => {
               button
               onClick={() => {
                 if (validateContact()) {
-                  props.handleUpdate({ id: props.id, name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers, email: props.email, pictureUrl: props.pictureUrl });
+                  props.handleUpdate({ id: props.id, name: props.name, jobTitle: props.jobTitle, address: props.address, phoneNumbers: props.phoneNumbers, email: props.email, pictureUrl: props.pictureUrl });
                   setEditing(false);
                   setOpen(false);
                 }
