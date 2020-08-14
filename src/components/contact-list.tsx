@@ -99,17 +99,21 @@ const ContactList = (props: any) => {
   }
 
   async function deleteContact(id: string) {
-    try {
-      const deleteMutation: any = await API.graphql(graphqlOperation(mutations.deleteContact, {
-        input: {
-          id
+    if (id === undefined) {
+      dispatch({ type: 'deleteContact', payload: undefined });
+    } else {
+      try {
+        const deleteMutation: any = await API.graphql(graphqlOperation(mutations.deleteContact, {
+          input: {
+            id
+          }
+        }));
+        if (deleteMutation) {
+          dispatch({ type: 'deleteContact', payload: deleteMutation.data.deleteContact.id });
         }
-      }));
-      if (deleteMutation) {
-        dispatch({ type: 'deleteContact', payload: deleteMutation.data.deleteContact.id });
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   }
 
