@@ -74,7 +74,7 @@ const ContactItem = (props: any) => {
     let valid = true;
     let validationErrors: any = {};
 
-    if (name.length > 0) {
+    if (name.length === 0) {
       valid = false;
       validationErrors.name = "Contact requires a name";
     }
